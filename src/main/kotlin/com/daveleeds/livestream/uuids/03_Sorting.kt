@@ -14,6 +14,11 @@ fun main() = runBlocking<Unit> {
     val first = Uuid.randomV7()
     val second = Uuid.randomV7()
     val third = Uuid.randomV7()
+
+    println("--------------------------------")
+
+    val reversed = listOf(third, second, first)
+    println(reversed.sorted())
 }
 
 private suspend fun Uuid.Companion.randomV7(): Uuid = UuidCreator

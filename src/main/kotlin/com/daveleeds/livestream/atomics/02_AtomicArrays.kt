@@ -3,26 +3,28 @@ package com.daveleeds.livestream.atomics
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlin.concurrent.atomics.AtomicIntArray
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.concurrent.atomics.incrementAndFetchAt
 
 @OptIn(ExperimentalAtomicApi::class)
 fun main() {
     val letters = 'a'..'e'
-    var counter = IntArray(5) { 0 }
+    var counter = AtomicIntArray(5) { 0 }
 
     runBlocking {
         text.lowercase().forEach { char ->
             val index = letters.indexOf(char)
             if (index >= 0) {
                 launch(Dispatchers.Default) {
-                    counter[index] = counter[index] + 1
+                    counter.incrementAndFetchAt(index)
                 }
             }
         }
     }
 
     for (i in 0..<5) {
-        println(counter[i])
+        println(counter.loadAt(i))
     }
 }
 
